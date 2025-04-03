@@ -1,18 +1,20 @@
 import { Injectable, OnApplicationBootstrap, OnModuleInit } from "@nestjs/common";
-import { Liquibase, LiquibaseConfig, POSTGRESQL_DEFAULT_CONFIG } from "liquibase";
+import { CommandHandler, Liquibase, Logger } from "liquibase";
+import { LiquibaseDynamicConfig } from "./liquibase.config";
 
 @Injectable()
 export class LiquibaseExecutor implements OnApplicationBootstrap {
 
     constructor(
-        private readonly config: LiquibaseConfig
+        private readonly config: LiquibaseDynamicConfig
     ) {}
 
     async onApplicationBootstrap() {
-        console.log("Loaded Liquibase Comfig.")
-    
-        const instance = new Liquibase(this.config);
+        const allow = this.config.allow;
+        if (!allow) return;
+        const instance = new Liquibase(this.config.config);
         await instance.update({})
+        await instance.status()
     }
 
 }
