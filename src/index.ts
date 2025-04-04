@@ -1,1 +1,1 @@
-export * from './liquibase.module'
+export * from './module/liquibase.module'

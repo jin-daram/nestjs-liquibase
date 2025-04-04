@@ -1,8 +1,7 @@
 import { DynamicModule, Module, ModuleMetadata } from '@nestjs/common'
-import { LiquibaseConfig } from 'liquibase';
-import { LiquibaseExecutor } from './liquibase.executor';
-import { LiquibaseDynamicConfig } from './liquibase.config';
-import { LiquibaseAsyncExecutor } from './liquibase-async.executor';
+import { LiquibaseExecutor } from '../executor/liquibase.executor';
+import { LiquibaseDynamicConfig } from '../type/liquibase.config';
+import { LiquibaseConfigAsyncOptions } from '../type/liquibase-config-async-options';
 
 @Module({})
 export class LiquibaseModule {
@@ -20,7 +19,7 @@ export class LiquibaseModule {
                     inject: ['LIQUIBASE_CONFIG']
                 },
             ],
-            exports: [LiquibaseExecutor]
+            exports: ['LIQUIBASE_CONFIG']
         }
     }
 
@@ -34,15 +33,9 @@ export class LiquibaseModule {
                     useFactory: options.useFactory!,
                     inject: options.inject || [],
                 },
-                LiquibaseAsyncExecutor
+                LiquibaseExecutor,
             ],
             exports: ['LIQUIBASE_CONFIG']
         };
     }
 }
-
-export interface LiquibaseConfigAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
-    useFactory?: (...args: any[]) => Promise<LiquibaseDynamicConfig> | LiquibaseDynamicConfig;
-    inject?: any[],
-}
-

@@ -1,0 +1,1 @@
+export const NOT_APPLIED_STATUS_KEYWORD = "not been applied";

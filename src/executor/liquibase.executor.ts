@@ -1,9 +1,10 @@
 import { Inject, Injectable, OnApplicationBootstrap, OnModuleInit } from "@nestjs/common";
 import { CommandHandler, Liquibase, Logger } from "liquibase";
-import { LiquibaseDynamicConfig } from "./liquibase.config";
+import { LiquibaseDynamicConfig } from "../type/liquibase.config";
+import { NOT_APPLIED_STATUS_KEYWORD } from "../constant/keyword.constant";
 
 @Injectable()
-export class LiquibaseAsyncExecutor implements OnApplicationBootstrap {
+export class LiquibaseExecutor implements OnApplicationBootstrap {
 
     constructor(
         @Inject('LIQUIBASE_CONFIG') private readonly config: LiquibaseDynamicConfig
@@ -13,7 +14,11 @@ export class LiquibaseAsyncExecutor implements OnApplicationBootstrap {
         const allow = this.config.allow;
         if (!allow) return;
         const instance = new Liquibase(this.config.config);
-        await instance.update({})
+        const result = await instance.status()
+        if (result.includes(NOT_APPLIED_STATUS_KEYWORD)) {
+            console.log("There are changes that have not been applied yet.")
+            await instance.update({})
+        }
     }
 
 }
