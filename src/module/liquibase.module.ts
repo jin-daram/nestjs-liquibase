@@ -35,7 +35,7 @@ export class LiquibaseModule {
                 },
                 LiquibaseExecutor,
             ],
-            exports: ['LIQUIBASE_CONFIG']
+            exports: ['LIQUIBASE_CONFIG', LiquibaseExecutor]
         };
     }
 }
