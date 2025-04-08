@@ -11,27 +11,35 @@ describe("nestjs-liquibase", () => {
     let client: Client;
 
     beforeAll(async () => {
-        const psql = await new GenericContainer("postgres")
-            .withExposedPorts(5432) // Using unused port.
+        const databasePort = 5432;
+
+        // TestContainer
+        const psql = await new GenericContainer("postgres") 
+            .withExposedPorts(databasePort) // Using unused port.
             .withEnvironment({"POSTGRES_PASSWORD": "mypassword"})
             .withName("test-postgres")
             .withAutoRemove(true)
             .start();
 
-        defaultConfig = {
+        const host = psql.getHost();
+        const port = psql.getMappedPort(databasePort)
+
+        // Liquibase Config
+        defaultConfig = { 
             allow: true,
             config: {
                 searchPath: 'example/',
                 changeLogFile: 'root.yaml',
-                url: "jdbc:postgresql://localhost:5431/postgres",
+                url: `jdbc:postgresql://localhost:${port}/postgres`,
                 username: "postgres",
                 password: "mypassword",
             }
         }
 
+        // PostgreSQL Client
         client = new Client({
-            host: "localhost",
-            port: 5431,
+            host: host,
+            port: port,
             user: "postgres",
             password: "mypassword",
             database: "postgres"
@@ -41,7 +49,7 @@ describe("nestjs-liquibase", () => {
     })
 
     beforeEach(async () => {
-        await client.query(`
+        const truncateQuery = `
             DO
             $$
             DECLARE
@@ -56,7 +64,8 @@ describe("nestjs-liquibase", () => {
                 END LOOP;
             END;
             $$;
-          `);
+          `
+        await client.query(truncateQuery);
         // TODO: testcontainer를 통해 postgreSQL 컨테이너 생성
         
     })
