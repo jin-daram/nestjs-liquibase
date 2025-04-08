@@ -68,7 +68,6 @@ LiquibaseModule.register({
 When server build, edit `nest-cli.json` so that the Liquibase related files are can be copied to the build result. 
 
 ```json
-...
 "compilerOptions": {
     "assets" : [
       {
@@ -81,9 +80,6 @@ When server build, edit `nest-cli.json` so that the Liquibase related files are 
       }
     ],
 }
-...
-
-
 ```
 
 When you build server, It will be copied to the build result as follows.
