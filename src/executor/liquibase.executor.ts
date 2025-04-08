@@ -10,26 +10,18 @@ export class LiquibaseExecutor {
         @Inject('LIQUIBASE_CONFIG') private readonly config: LiquibaseDynamicConfig
     ) {}
 
-    // async onApplicationBootstrap() {
-    //     const allow = this.config.allow;
-    //     if (!allow) return;
-    //     const instance = new Liquibase(this.config.config);
-    //     const result = await instance.status()
-    //     if (result.includes(NOT_APPLIED_STATUS_KEYWORD)) {
-    //         console.log("There are changes that have not been applied yet.")
-    //         await instance.update({})
-    //     }
-    // }
-
     async runMigration() {
-        const allow = this.config.allow;
-        if (!allow) return;
-        const instance = new Liquibase(this.config.config);
+        if (!this.config.allow) return; // if not allow, return
+        const instance = new Liquibase(this.config.config); // create a new instance of Liquibase
         const result = await instance.status()
         if (result.includes(NOT_APPLIED_STATUS_KEYWORD)) {
             console.log("There are changes that have not been applied yet.")
             await instance.update({})
         }
+    }
+
+    isAllow() {
+        return this.config.allow;
     }
 
 }
