@@ -1,6 +1,6 @@
 {
   "name": "nestjs-liquibase",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -8,8 +8,13 @@
     "prepare": "npm run build",
     "test": "jest --testTimeout=20000"
   },
+  "repository" : {
+    "type" : "git",
+    "url" : "git+https://github.com/jin-daram/nestjs-liquibase.git"
+  },
+  "homepage": "https://github.com/jin-daram/nestjs-liquibase.git",
   "keywords": [],
-  "author": "",
+  "author": "jin-daram",
   "license": "ISC",
   "description": "",
   "devDependencies": {
